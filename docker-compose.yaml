@@ -1,0 +1,26 @@
+version: '4.35.1'
+services:
+  app:
+    image: app/inventory_socks_warehouse:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - service-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://service-db/inventory-socks-warehouse
+
+  service-db:
+    image: postgres:15.3-alpine3.18
+    environment:
+      POSTGRES_DB: inventory-socks-warehouse
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+
+volumes:
+  db-data:
